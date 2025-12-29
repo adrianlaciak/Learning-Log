@@ -5,6 +5,10 @@ def clear_screen():
 
 clear_screen()
 
+zus = 0
+skladka_zdrowotna = 0
+podatek = 0
+
 while True:
     brutto_input = input("Proszę podać kwotę brutto (np. 5000.50): ")
     try:
@@ -59,18 +63,56 @@ if umowa == 1:
     print("Wybrano Umowę o Pracę.")
 elif umowa == 2:
     print("Wybrano Umowę Zlecenie.")
+    while True:
+        czy_skladka_chorobowa = input("Czy odliczyć składkę chorobową 2,45%?\n[Y]es\n[N]o\nProszę wybrać spośród podanych: ").lower()
+        if czy_skladka_chorobowa in ('y','n'):
+            break
+        else:
+            print("Proszę wybrać Y lub N.")
+    while True:
+        czy_student = input("Czy jesteś studentem?\n[Y]es\n[N]o\nProszę wybrać spośród podanych: ").lower()
+        if czy_student in ('y','n'):
+            break
+        else:
+            print("Proszę wybrać Y lub N.")
+
 elif umowa == 3:
     print("Wybrano Umowę o Dzieło.")
 else:
     print("Wybrano B2B.")
 
-netto = 0
+skladka_emerytalna = 0.0976
+skladka_rentowa = 0.0150
+skladka_chorobowa = 0.0245
 #
 #1. Umowa o Pracę
 #
 #2. Umowa Zlecenie
 if umowa == 2:
-    if wiek < 26:
+    if wiek < 26 and czy_student == 'y':
         netto = brutto
+    else:
+        if czy_skladka_chorobowa == 'y':
+            zus = brutto * (skladka_rentowa + skladka_emerytalna + skladka_chorobowa)
+        else:
+            zus = brutto * (skladka_rentowa + skladka_emerytalna)
 
-print(f"Kwota brutto: {brutto:.2f}\nKwota netto: {netto:.2f}")
+        podstawa_zdrowotna = brutto - zus
+        skladka_zdrowotna = podstawa_zdrowotna * 0.09
+
+        if wiek < 26:
+            podatek = 0
+        else:
+            koszty_uzyskania_przychodu = podstawa_zdrowotna * 0.20
+            podstawa_podatku = podstawa_zdrowotna - koszty_uzyskania_przychodu
+            podatek = (podstawa_podatku * 0.12) - 300
+            if podatek < 0: podatek = 0
+
+
+        netto = brutto - zus - skladka_zdrowotna - podatek
+clear_screen()
+print("P O D S U M O W A N I E")
+print(f"Kwota brutto: {brutto:>10.2f} PLN")
+print(f"ZUS + NFZ: {zus + skladka_zdrowotna:>10.2f} PLN")
+print(f"Podatek PIT: {podatek:>10.2f} PLN")
+print(f"Kwota netto: {netto:>10.2f} PLN")
