@@ -87,9 +87,21 @@ skladka_rentowa = 0.0150
 skladka_chorobowa = 0.0245
 #
 #1. Umowa o Pracę
-#
+if umowa == 1:
+    zus = brutto * (skladka_rentowa + skladka_emerytalna + skladka_chorobowa)
+    podstawa_zdrowotna = brutto - zus
+    skladka_zdrowotna = podstawa_zdrowotna * 0.09
+    if wiek < 26:
+        podatek = 0
+    else:
+        koszty_uzyskania_przychodu = 250
+        podstawa_podatku = podstawa_zdrowotna - koszty_uzyskania_przychodu
+        podatek = (podstawa_podatku * 0.12) - 300
+        if podatek < 0: podatek = 0
+
+    netto = brutto - zus - skladka_zdrowotna - podatek
 #2. Umowa Zlecenie
-if umowa == 2:
+elif umowa == 2:
     if wiek < 26 and czy_student == 'y':
         netto = brutto
     else:
@@ -109,18 +121,17 @@ if umowa == 2:
             podatek = (podstawa_podatku * 0.12) - 300
             if podatek < 0: podatek = 0
 
-
         netto = brutto - zus - skladka_zdrowotna - podatek
 
 #3. Umowa o Dzieło
 elif umowa == 3:
     if wiek < 26:
-        netto = brutto
+        podatek = 0
     else:
         koszty_uzyskania_przychodu = brutto * 0.20
         podstawa_podatku = brutto - koszty_uzyskania_przychodu
         podatek = podstawa_podatku * 0.12
-        netto = brutto - podatek
+    netto = brutto - podatek
 
 
 clear_screen()
