@@ -8,6 +8,7 @@ clear_screen()
 zus = 0
 skladka_zdrowotna = 0
 podatek = 0
+netto = 0
 
 while True:
     brutto_input = input("Proszę podać kwotę brutto (np. 5000.50): ")
@@ -110,6 +111,18 @@ if umowa == 2:
 
 
         netto = brutto - zus - skladka_zdrowotna - podatek
+
+#3. Umowa o Dzieło
+elif umowa == 3:
+    if wiek < 26:
+        netto = brutto
+    else:
+        koszty_uzyskania_przychodu = brutto * 0.20
+        podstawa_podatku = brutto - koszty_uzyskania_przychodu
+        podatek = podstawa_podatku * 0.12
+        netto = brutto - podatek
+
+
 clear_screen()
 print("P O D S U M O W A N I E")
 print(f"Kwota brutto: {brutto:>10.2f} PLN")
