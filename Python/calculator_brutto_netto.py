@@ -1,7 +1,9 @@
 import os
 
+
 def clear_screen():
     print("\n" * 100)
+
 
 clear_screen()
 
@@ -48,7 +50,8 @@ clear_screen()
 print(f"Przyjęto do obliczeń wiek {wiek} lat")
 
 while True:
-    umowa = input("Proszę wybrać źródło dochodu spośród podanych:\n[1] Umowa o Pracę\n[2] Umowa Zlecenie\n[3] Umowa o Dzieło\n[4] B2B\nUmowa numer: ")
+    umowa = input(
+        "Proszę wybrać źródło dochodu spośród podanych:\n[1] Umowa o Pracę\n[2] Umowa Zlecenie\n[3] Umowa o Dzieło\n[4] B2B\nUmowa numer: ")
     try:
         umowa = int(umowa)
         if 1 <= umowa <= 4:
@@ -65,14 +68,15 @@ if umowa == 1:
 elif umowa == 2:
     print("Wybrano Umowę Zlecenie.")
     while True:
-        czy_skladka_chorobowa = input("Czy odliczyć składkę chorobową 2,45%?\n[Y]es\n[N]o\nProszę wybrać spośród podanych: ").lower()
-        if czy_skladka_chorobowa in ('y','n'):
+        czy_skladka_chorobowa = input(
+            "Czy odliczyć składkę chorobową 2,45%?\n[Y]es\n[N]o\nProszę wybrać spośród podanych: ").lower()
+        if czy_skladka_chorobowa in ('y', 'n'):
             break
         else:
             print("Proszę wybrać Y lub N.")
     while True:
         czy_student = input("Czy jesteś studentem?\n[Y]es\n[N]o\nProszę wybrać spośród podanych: ").lower()
-        if czy_student in ('y','n'):
+        if czy_student in ('y', 'n'):
             break
         else:
             print("Proszę wybrać Y lub N.")
@@ -86,7 +90,7 @@ skladka_emerytalna = 0.0976
 skladka_rentowa = 0.0150
 skladka_chorobowa = 0.0245
 #
-#1. Umowa o Pracę
+# 1. Umowa o Pracę
 if umowa == 1:
     zus = brutto * (skladka_rentowa + skladka_emerytalna + skladka_chorobowa)
     podstawa_zdrowotna = brutto - zus
@@ -100,7 +104,7 @@ if umowa == 1:
         if podatek < 0: podatek = 0
 
     netto = brutto - zus - skladka_zdrowotna - podatek
-#2. Umowa Zlecenie
+# 2. Umowa Zlecenie
 elif umowa == 2:
     if wiek < 26 and czy_student == 'y':
         netto = brutto
@@ -123,7 +127,7 @@ elif umowa == 2:
 
         netto = brutto - zus - skladka_zdrowotna - podatek
 
-#3. Umowa o Dzieło
+# 3. Umowa o Dzieło
 elif umowa == 3:
     if wiek < 26:
         podatek = 0
@@ -133,6 +137,66 @@ elif umowa == 3:
         podatek = podstawa_podatku * 0.12
     netto = brutto - podatek
 
+# 4. B2B
+elif umowa == 4:
+    while True:
+        forma_opodatkowania = input(
+            "Proszę wybrać preferowaną formę opodatkowania: \n[1] Ryczałt\n[2] Podatek Liniowy\n[3] Skala podatkowa\nWybrana forma: ")
+        try:
+            forma_opodatkowania = int(forma_opodatkowania)
+            if 1 <= forma_opodatkowania <= 3:
+                break
+            else:
+                print("Proszę wybrać liczbę od 1 do 3")
+        except ValueError:
+            print("Proszę wybrać liczbę od 1 do 3")
+
+    if forma_opodatkowania == 1:
+        while True:
+            stawka_ryczaltu = input("Proszę wybrać stawkę ryczłtu: \n[1] 8,5%\n[2] 12%\n[3] 15%\nWybrana stawka: ")
+            try:
+                stawka_ryczaltu = int(stawka_ryczaltu)
+                if 1 <= stawka_ryczaltu <= 3:
+                    break
+                else:
+                    print("Proszę wybrać liczbę od 1 do 3.")
+            except ValueError:
+                print("Proszę wybrać liczbę od 1 do 3.")
+
+        if stawka_ryczaltu == 1:
+            stawka_ryczaltu = 0.085
+        elif stawka_ryczaltu == 2:
+            stawka_ryczaltu = 0.12
+        else:
+            stawka_ryczaltu = 0.15
+
+        przychod_roczny = brutto * 12
+
+    if przychod_roczny <= 60000:
+        skladka_zdrowotna = 419
+    elif przychod_roczny <= 300000:
+        skladka_zdrowotna = 699
+    else:
+        skladka_zdrowotna = 1258
+
+    while True:
+        wybor_zus = input("Proszę wybrać stawkę ZUS:\n[1] Mały ZUS\n[2] Duży ZUS\nWybór ZUS: ")
+        try:
+            wybor_zus = int(wybor_zus)
+            if wybor_zus in (1, 2):
+                break
+            else:
+                print("Proszę wybrać liczbę od 1 do 2.")
+        except ValueError:
+            print("Proszę wybrać liczbę od 1 do 2.")
+    if wybor_zus == 1:
+        zus = 405
+    else:
+        zus = 1750
+
+    podstawa_opodatkowania = brutto - (zus * 0.5)
+    podatek = podstawa_opodatkowania * stawka_ryczaltu
+    netto = brutto - zus - skladka_zdrowotna - podatek
 
 clear_screen()
 print("P O D S U M O W A N I E")
