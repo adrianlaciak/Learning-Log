@@ -201,7 +201,7 @@ elif umowa == 4:
         podstawa_opodatkowania = brutto - (zus * 0.5)
         podatek = podstawa_opodatkowania * stawka_ryczaltu
 
-    elif forma_opodatkowania == 2:
+    else:
         while True:
             koszty_firmowe = input("Proszę podać miesięczne koszty prowadzenia działalności: ")
             try:
@@ -218,9 +218,20 @@ elif umowa == 4:
                 print("Proszę podać kwotę w formacie zmiennoprzecinkowym (np. 150.30).")
 
         dochod = brutto - koszty_firmowe - zus
-        skladka_zdrowotna = dochod * 0.049
-        podatek = dochod * 0.19
-        
+
+        if forma_opodatkowania == 2:
+            skladka_zdrowotna = dochod * 0.049
+            podatek = dochod * 0.19
+
+        else:
+            skladka_zdrowotna = dochod * 0.09
+
+            if dochod <= 10000:
+                podatek = dochod * 0.12 - 300
+            else:
+                nadwyzka = dochod - 10000
+                podatek = 1200 + (nadwyzka * 0.32) - 300
+
         if podatek < 0: podatek = 0
 
         if skladka_zdrowotna < 419.46: skladka_zdrowotna = 419.46
