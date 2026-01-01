@@ -1,0 +1,15 @@
+bin/
+obj/
+
+.idea/
+.vs/
+*.user
+*.userosscache
+*.sln.docindex
+
+.DS_Store
+Thumbs.db
+
+*.log
+.project
+.settings/
