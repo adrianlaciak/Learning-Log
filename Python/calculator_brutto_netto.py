@@ -151,6 +151,25 @@ elif umowa == 4:
         except ValueError:
             print("Proszę wybrać liczbę od 1 do 3")
 
+    clear_screen()
+
+    while True:
+        wybor_zus = input("Proszę wybrać stawkę ZUS:\n[1] Mały ZUS\n[2] Duży ZUS\nWybór ZUS: ")
+        try:
+            wybor_zus = int(wybor_zus)
+            if wybor_zus in (1, 2):
+                break
+            else:
+                print("Proszę wybrać liczbę od 1 do 2.")
+        except ValueError:
+            print("Proszę wybrać liczbę od 1 do 2.")
+    if wybor_zus == 1:
+        zus = 405
+    else:
+        zus = 1750
+
+    clear_screen()
+
     if forma_opodatkowania == 1:
         while True:
             stawka_ryczaltu = input("Proszę wybrać stawkę ryczłtu: \n[1] 8,5%\n[2] 12%\n[3] 15%\nWybrana stawka: ")
@@ -172,30 +191,40 @@ elif umowa == 4:
 
         przychod_roczny = brutto * 12
 
-    if przychod_roczny <= 60000:
-        skladka_zdrowotna = 419
-    elif przychod_roczny <= 300000:
-        skladka_zdrowotna = 699
-    else:
-        skladka_zdrowotna = 1258
+        if przychod_roczny <= 60000:
+            skladka_zdrowotna = 419
+        elif przychod_roczny <= 300000:
+            skladka_zdrowotna = 699
+        else:
+            skladka_zdrowotna = 1258
 
-    while True:
-        wybor_zus = input("Proszę wybrać stawkę ZUS:\n[1] Mały ZUS\n[2] Duży ZUS\nWybór ZUS: ")
-        try:
-            wybor_zus = int(wybor_zus)
-            if wybor_zus in (1, 2):
-                break
-            else:
-                print("Proszę wybrać liczbę od 1 do 2.")
-        except ValueError:
-            print("Proszę wybrać liczbę od 1 do 2.")
-    if wybor_zus == 1:
-        zus = 405
-    else:
-        zus = 1750
+        podstawa_opodatkowania = brutto - (zus * 0.5)
+        podatek = podstawa_opodatkowania * stawka_ryczaltu
 
-    podstawa_opodatkowania = brutto - (zus * 0.5)
-    podatek = podstawa_opodatkowania * stawka_ryczaltu
+    elif forma_opodatkowania == 2:
+        while True:
+            koszty_firmowe = input("Proszę podać miesięczne koszty prowadzenia działalności: ")
+            try:
+                koszty_firmowe = float(koszty_firmowe)
+                if koszty_firmowe < 0:
+                    print("Kwota nie może być mniejsza od 0.")
+                    continue
+                elif koszty_firmowe * 100 == int(koszty_firmowe * 100):
+                    break
+                else:
+                    print("Błąd: Kwota nie może mieć więcej niż 2 miejsca po przecinku (grosze).")
+                    continue
+            except ValueError:
+                print("Proszę podać kwotę w formacie zmiennoprzecinkowym (np. 150.30).")
+
+        dochod = brutto - koszty_firmowe - zus
+        skladka_zdrowotna = dochod * 0.049
+        podatek = dochod * 0.19
+        
+        if podatek < 0: podatek = 0
+
+        if skladka_zdrowotna < 419.46: skladka_zdrowotna = 419.46
+
     netto = brutto - zus - skladka_zdrowotna - podatek
 
 clear_screen()
