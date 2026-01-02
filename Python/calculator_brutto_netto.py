@@ -1,246 +1,305 @@
 import os
+import sys
 
 
+# Function to clear the console screen safely
+# Funkcja do bezpiecznego czyszczenia ekranu konsoli
 def clear_screen():
-    print("\n" * 100)
+    # Check if we are running in a real terminal / Sprawdzamy, czy działamy w prawdziwym terminalu
+    if sys.stdout.isatty():
+        if os.name == 'nt':
+            os.system('cls')  # Windows
+        else:
+            # Linux/Mac - suppress errors if TERM is missing / Linux/Mac - ukryj błędy, jeśli brakuje TERM
+            result = os.system('clear 2> /dev/null')
+            if result != 0:
+                print("\n" * 50)
+    else:
+        # Fallback for IDEs like PyCharm/VS Code output window / Zapasowe rozwiązanie dla okien wyjścia IDE
+        print("\n" * 50)
 
 
 clear_screen()
 
-zus = 0
-skladka_zdrowotna = 0
-podatek = 0
-netto = 0
+# Initialize variables / Inicjalizacja zmiennych
+social_security = 0  # ZUS
+health_insurance = 0  # Składka zdrowotna
+income_tax = 0  # Podatek
+net_amount = 0  # Kwota netto
 
+# --- STEP 1: Get Gross Amount / KROK 1: Pobranie kwoty brutto ---
 while True:
-    brutto_input = input("Proszę podać kwotę brutto (np. 5000.50): ")
+    gross_input = input("Please enter the gross amount (e.g., 5000.50): ")
     try:
-        # Próbujemy zamienić tekst na liczbę
-        brutto = float(brutto_input)
+        # Try to convert string to float / Próba zamiany tekstu na liczbę zmiennoprzecinkową
+        gross_amount = float(gross_input)
 
-        # Sprawdzamy, czy kwota nie ma więcej niż 2 miejsc po przecinku
-        if (brutto * 100) != int(brutto * 100):
-            print("Błąd: Kwota nie może mieć więcej niż 2 miejsca po przecinku (grosze).")
+        # Check decimal places / Sprawdzenie miejsca po przecinku
+        if (gross_amount * 100) != int(gross_amount * 100):
+            print("The amount cannot have more than 2 decimal places.")
             continue
 
-        if brutto <= 0:
-            print("Błąd: Kwota musi być większa od zera.")
+        if gross_amount <= 0:
+            print("The amount must be greater than zero.")
             continue
 
-        # Jeśli wszystko jest ok, przerywamy pętlę
+        # Break loop if correct / Przerwanie pętli, jeśli wszystko ok
         break
 
     except ValueError:
-        print("Błąd: To nie jest prawidłowa liczba. Użyj kropki jako separatora.")
+        print("Invalid number. Please use a dot as a separator.")
 
 clear_screen()
 
-print(f"Przyjęta kwota do obliczeń: {brutto:.2f} PLN")
+print(f"Accepted amount for calculation: {gross_amount:.2f} PLN")
 
+# --- STEP 2: Get Age / KROK 2: Pobranie wieku ---
 while True:
-    wiek = input("Proszę podać swój wiek: ")
+    age_input = input("Please enter your age: ")
     try:
-        wiek = int(wiek)
+        age = int(age_input)
         break
     except ValueError:
-        print("Proszę podać poprawny wiek w latach (np. 20)")
+        print("Please enter a valid age in years (e.g., 20)")
 
 clear_screen()
 
-print(f"Przyjęto do obliczeń wiek {wiek} lat")
+print(f"Age accepted for calculation: {age} years")
 
+# --- STEP 3: Choose Contract Type / KROK 3: Wybranie rodzaju umowy ---
 while True:
-    umowa = input(
-        "Proszę wybrać źródło dochodu spośród podanych:\n[1] Umowa o Pracę\n[2] Umowa Zlecenie\n[3] Umowa o Dzieło\n[4] B2B\nUmowa numer: ")
+    print("Please select the source of income:")
+    print("[1] Employment Contract (Umowa o Pracę)")
+    print("[2] Mandate Contract (Umowa Zlecenie)")
+    print("[3] Specific Task Contract (Umowa o Dzieło)")
+    print("[4] B2B (Business-to-Business)")
+    contract_type = input("Contract number: ")
+
     try:
-        umowa = int(umowa)
-        if 1 <= umowa <= 4:
+        contract_type = int(contract_type)
+        if 1 <= contract_type <= 4:
             break
         else:
-            print("Proszę wpisać odpowiednią liczbę: 1, 2, 3 lub 4.")
+            print("Please enter a valid number: 1, 2, 3 or 4.")
     except ValueError:
-        print("Proszę wpisać odpowiednią liczbę: 1, 2, 3 lub 4.")
+        print("Please enter a valid number: 1, 2, 3 or 4.")
 
 clear_screen()
 
-if umowa == 1:
-    print("Wybrano Umowę o Pracę.")
-elif umowa == 2:
-    print("Wybrano Umowę Zlecenie.")
-    while True:
-        czy_skladka_chorobowa = input(
-            "Czy odliczyć składkę chorobową 2,45%?\n[Y]es\n[N]o\nProszę wybrać spośród podanych: ").lower()
-        if czy_skladka_chorobowa in ('y', 'n'):
-            break
-        else:
-            print("Proszę wybrać Y lub N.")
-    while True:
-        czy_student = input("Czy jesteś studentem?\n[Y]es\n[N]o\nProszę wybrać spośród podanych: ").lower()
-        if czy_student in ('y', 'n'):
-            break
-        else:
-            print("Proszę wybrać Y lub N.")
+# Handle specific contract details / Obsługa szczegółów konkretnej umowy
+if contract_type == 1:
+    print("Selected: Employment Contract.")
 
-elif umowa == 3:
-    print("Wybrano Umowę o Dzieło.")
+elif contract_type == 2:
+    print("Selected: Mandate Contract.")
+    # Ask about sickness insurance / Pytanie o składkę chorobową
+    while True:
+        deduct_sickness = input("Deduct sickness insurance 2.45%?\n[Y]es\n[N]o\nPlease select: ").lower()
+        if deduct_sickness in ('y', 'n'):
+            break
+        else:
+            print("Please select Y or N.")
+
+    # Ask about student status / Pytanie o status studenta
+    while True:
+        is_student = input("Are you a student?\n[Y]es\n[N]o\nPlease select: ").lower()
+        if is_student in ('y', 'n'):
+            break
+        else:
+            print("Please select Y or N.")
+
+elif contract_type == 3:
+    print("Selected: Specific Task Contract.")
+
 else:
-    print("Wybrano B2B.")
+    print("Selected: B2B.")
 
-skladka_emerytalna = 0.0976
-skladka_rentowa = 0.0150
-skladka_chorobowa = 0.0245
-#
-# 1. Umowa o Pracę
-if umowa == 1:
-    zus = brutto * (skladka_rentowa + skladka_emerytalna + skladka_chorobowa)
-    podstawa_zdrowotna = brutto - zus
-    skladka_zdrowotna = podstawa_zdrowotna * 0.09
-    if wiek < 26:
-        podatek = 0
-    else:
-        koszty_uzyskania_przychodu = 250
-        podstawa_podatku = podstawa_zdrowotna - koszty_uzyskania_przychodu
-        podatek = (podstawa_podatku * 0.12) - 300
-        if podatek < 0: podatek = 0
+# Define constants / Definicja stałych
+pension_contribution_rate = 0.0976  # Składka emerytalna
+disability_contribution_rate = 0.0150  # Składka rentowa
+sickness_contribution_rate = 0.0245  # Składka chorobowa
 
-    netto = brutto - zus - skladka_zdrowotna - podatek
-# 2. Umowa Zlecenie
-elif umowa == 2:
-    if wiek < 26 and czy_student == 'y':
-        netto = brutto
+# --- CALCULATIONS / OBLICZENIA ---
+
+# 1. Employment Contract / Umowa o Pracę
+if contract_type == 1:
+    social_security = gross_amount * (
+                disability_contribution_rate + pension_contribution_rate + sickness_contribution_rate)
+    health_basis = gross_amount - social_security
+    health_insurance = health_basis * 0.09
+
+    if age < 26:
+        income_tax = 0
     else:
-        if czy_skladka_chorobowa == 'y':
-            zus = brutto * (skladka_rentowa + skladka_emerytalna + skladka_chorobowa)
+        tax_deductible_expenses = 250  # Koszty uzyskania przychodu
+        tax_basis = health_basis - tax_deductible_expenses
+        income_tax = (tax_basis * 0.12) - 300
+        if income_tax < 0:
+            income_tax = 0
+
+    net_amount = gross_amount - social_security - health_insurance - income_tax
+
+# 2. Mandate Contract / Umowa Zlecenie
+elif contract_type == 2:
+    if age < 26 and is_student == 'y':
+        net_amount = gross_amount
+    else:
+        if deduct_sickness == 'y':
+            social_security = gross_amount * (
+                        disability_contribution_rate + pension_contribution_rate + sickness_contribution_rate)
         else:
-            zus = brutto * (skladka_rentowa + skladka_emerytalna)
+            social_security = gross_amount * (disability_contribution_rate + pension_contribution_rate)
 
-        podstawa_zdrowotna = brutto - zus
-        skladka_zdrowotna = podstawa_zdrowotna * 0.09
+        health_basis = gross_amount - social_security
+        health_insurance = health_basis * 0.09
 
-        if wiek < 26:
-            podatek = 0
+        if age < 26:
+            income_tax = 0
         else:
-            koszty_uzyskania_przychodu = podstawa_zdrowotna * 0.20
-            podstawa_podatku = podstawa_zdrowotna - koszty_uzyskania_przychodu
-            podatek = (podstawa_podatku * 0.12) - 300
-            if podatek < 0: podatek = 0
+            tax_deductible_expenses = health_basis * 0.20
+            tax_basis = health_basis - tax_deductible_expenses
+            income_tax = (tax_basis * 0.12) - 300
+            if income_tax < 0:
+                income_tax = 0
 
-        netto = brutto - zus - skladka_zdrowotna - podatek
+        net_amount = gross_amount - social_security - health_insurance - income_tax
 
-# 3. Umowa o Dzieło
-elif umowa == 3:
-    if wiek < 26:
-        podatek = 0
+# 3. Specific Task Contract / Umowa o Dzieło
+elif contract_type == 3:
+    if age < 26:
+        income_tax = 0
     else:
-        koszty_uzyskania_przychodu = brutto * 0.20
-        podstawa_podatku = brutto - koszty_uzyskania_przychodu
-        podatek = podstawa_podatku * 0.12
-    netto = brutto - podatek
+        tax_deductible_expenses = gross_amount * 0.20
+        tax_basis = gross_amount - tax_deductible_expenses
+        income_tax = tax_basis * 0.12
+    net_amount = gross_amount - income_tax
 
-# 4. B2B
-elif umowa == 4:
+# 4. B2B / Działalność gospodarcza
+elif contract_type == 4:
+    # Choose taxation form / Wybór formy opodatkowania
     while True:
-        forma_opodatkowania = input(
-            "Proszę wybrać preferowaną formę opodatkowania: \n[1] Ryczałt\n[2] Podatek Liniowy\n[3] Skala podatkowa\nWybrana forma: ")
+        print("Please choose your preferred taxation form:")
+        print("[1] Lump Sum (Ryczałt)")
+        print("[2] Linear Tax (Podatek Liniowy)")
+        print("[3] Tax Scale (Skala Podatkowa)")
+        taxation_form = input("Selected form: ")
         try:
-            forma_opodatkowania = int(forma_opodatkowania)
-            if 1 <= forma_opodatkowania <= 3:
+            taxation_form = int(taxation_form)
+            if 1 <= taxation_form <= 3:
                 break
             else:
-                print("Proszę wybrać liczbę od 1 do 3")
+                print("Please select a number between 1 and 3")
         except ValueError:
-            print("Proszę wybrać liczbę od 1 do 3")
+            print("Please select a number between 1 and 3")
 
     clear_screen()
 
+    # Choose ZUS rate / Wybór stawki ZUS
     while True:
-        wybor_zus = input("Proszę wybrać stawkę ZUS:\n[1] Mały ZUS\n[2] Duży ZUS\nWybór ZUS: ")
+        print("Please select ZUS rate:")
+        print("[1] Small ZUS (Mały ZUS)")
+        print("[2] Big ZUS (Duży ZUS)")
+        zus_choice = input("Your choice: ")
         try:
-            wybor_zus = int(wybor_zus)
-            if wybor_zus in (1, 2):
+            zus_choice = int(zus_choice)
+            if zus_choice in (1, 2):
                 break
             else:
-                print("Proszę wybrać liczbę od 1 do 2.")
+                print("Please select 1 or 2.")
         except ValueError:
-            print("Proszę wybrać liczbę od 1 do 2.")
-    if wybor_zus == 1:
-        zus = 405
+            print("Please select 1 or 2.")
+
+    if zus_choice == 1:
+        social_security = 405
     else:
-        zus = 1750
+        social_security = 1750
 
     clear_screen()
 
-    if forma_opodatkowania == 1:
+    # Logic for Lump Sum / Logika dla Ryczałtu
+    if taxation_form == 1:
         while True:
-            stawka_ryczaltu = input("Proszę wybrać stawkę ryczłtu: \n[1] 8,5%\n[2] 12%\n[3] 15%\nWybrana stawka: ")
+            print("Please select Lump Sum rate:")
+            print("[1] 8.5%")
+            print("[2] 12%")
+            print("[3] 15%")
+            lump_sum_rate_choice = input("Selected rate: ")
             try:
-                stawka_ryczaltu = int(stawka_ryczaltu)
-                if 1 <= stawka_ryczaltu <= 3:
+                lump_sum_rate_choice = int(lump_sum_rate_choice)
+                if 1 <= lump_sum_rate_choice <= 3:
                     break
                 else:
-                    print("Proszę wybrać liczbę od 1 do 3.")
+                    print("Please select a number between 1 and 3.")
             except ValueError:
-                print("Proszę wybrać liczbę od 1 do 3.")
+                print("Please select a number between 1 and 3.")
 
-        if stawka_ryczaltu == 1:
-            stawka_ryczaltu = 0.085
-        elif stawka_ryczaltu == 2:
-            stawka_ryczaltu = 0.12
+        if lump_sum_rate_choice == 1:
+            lump_sum_rate = 0.085
+        elif lump_sum_rate_choice == 2:
+            lump_sum_rate = 0.12
         else:
-            stawka_ryczaltu = 0.15
+            lump_sum_rate = 0.15
 
-        przychod_roczny = brutto * 12
+        annual_revenue = gross_amount * 12
 
-        if przychod_roczny <= 60000:
-            skladka_zdrowotna = 419
-        elif przychod_roczny <= 300000:
-            skladka_zdrowotna = 699
+        # Health insurance thresholds for Lump Sum / Progi zdrowotne na ryczałcie
+        if annual_revenue <= 60000:
+            health_insurance = 419
+        elif annual_revenue <= 300000:
+            health_insurance = 699
         else:
-            skladka_zdrowotna = 1258
+            health_insurance = 1258
 
-        podstawa_opodatkowania = brutto - (zus * 0.5)
-        podatek = podstawa_opodatkowania * stawka_ryczaltu
+        tax_basis = gross_amount - (social_security * 0.5)
+        income_tax = tax_basis * lump_sum_rate
 
+    # Logic for Linear Tax or Tax Scale / Logika dla Liniowego lub Skali
     else:
         while True:
-            koszty_firmowe = input("Proszę podać miesięczne koszty prowadzenia działalności: ")
+            business_costs_input = input("Please enter monthly business costs: ")
             try:
-                koszty_firmowe = float(koszty_firmowe)
-                if koszty_firmowe < 0:
-                    print("Kwota nie może być mniejsza od 0.")
+                business_costs = float(business_costs_input)
+                if business_costs < 0:
+                    print("Amount cannot be less than 0.")
                     continue
-                elif koszty_firmowe * 100 == int(koszty_firmowe * 100):
+                elif business_costs * 100 == int(business_costs * 100):
                     break
                 else:
-                    print("Błąd: Kwota nie może mieć więcej niż 2 miejsca po przecinku (grosze).")
+                    print("Error: The amount cannot have more than 2 decimal places.")
                     continue
             except ValueError:
-                print("Proszę podać kwotę w formacie zmiennoprzecinkowym (np. 150.30).")
+                print("Please enter a valid float amount (e.g. 150.30).")
 
-        dochod = brutto - koszty_firmowe - zus
+        income = gross_amount - business_costs - social_security
 
-        if forma_opodatkowania == 2:
-            skladka_zdrowotna = dochod * 0.049
-            podatek = dochod * 0.19
+        # Linear Tax / Podatek Liniowy
+        if taxation_form == 2:
+            health_insurance = income * 0.049
+            income_tax = income * 0.19
 
+        # Tax Scale / Skala Podatkowa
         else:
-            skladka_zdrowotna = dochod * 0.09
+            health_insurance = income * 0.09
 
-            if dochod <= 10000:
-                podatek = dochod * 0.12 - 300
+            if income <= 10000:
+                income_tax = income * 0.12 - 300
             else:
-                nadwyzka = dochod - 10000
-                podatek = 1200 + (nadwyzka * 0.32) - 300
+                surplus = income - 10000
+                income_tax = 1200 + (surplus * 0.32) - 300
 
-        if podatek < 0: podatek = 0
+        if income_tax < 0:
+            income_tax = 0
 
-        if skladka_zdrowotna < 419.46: skladka_zdrowotna = 419.46
+        # Minimum health insurance / Minimalna składka zdrowotna
+        if health_insurance < 419.46:
+            health_insurance = 419.46
 
-    netto = brutto - zus - skladka_zdrowotna - podatek
+    net_amount = gross_amount - social_security - health_insurance - income_tax
 
+# --- SUMMARY / PODSUMOWANIE ---
 clear_screen()
-print("P O D S U M O W A N I E")
-print(f"Kwota brutto: {brutto:>10.2f} PLN")
-print(f"ZUS + NFZ: {zus + skladka_zdrowotna:>10.2f} PLN")
-print(f"Podatek PIT: {podatek:>10.2f} PLN")
-print(f"Kwota netto: {netto:>10.2f} PLN")
+print("S U M M A R Y")
+print(f"Gross Amount:      {gross_amount:>10.2f} PLN")
+print(f"ZUS + Health Ins.: {social_security + health_insurance:>10.2f} PLN")
+print(f"Income Tax (PIT):  {income_tax:>10.2f} PLN")
+print(f"Net Amount:        {net_amount:>10.2f} PLN")
