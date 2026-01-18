@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiggestNum", "BiggestNum\Bi
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuadraticEquation", "QuadraticEquation\QuadraticEquation.csproj", "{66821792-0E68-475D-A8C6-5435C6D5B27A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Factorial", "Factorial\Factorial.csproj", "{8005BDC3-B25A-4C52-90DB-F2D0454CD350}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,5 +56,9 @@ Global
 		{66821792-0E68-475D-A8C6-5435C6D5B27A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66821792-0E68-475D-A8C6-5435C6D5B27A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66821792-0E68-475D-A8C6-5435C6D5B27A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8005BDC3-B25A-4C52-90DB-F2D0454CD350}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8005BDC3-B25A-4C52-90DB-F2D0454CD350}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8005BDC3-B25A-4C52-90DB-F2D0454CD350}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8005BDC3-B25A-4C52-90DB-F2D0454CD350}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
