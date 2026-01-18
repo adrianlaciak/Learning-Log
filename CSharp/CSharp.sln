@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Divider", "Divider\Divider.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Calculator", "Calculator\Calculator.csproj", "{DBF1B9B0-F278-4EF1-AE44-44ECD7AD24DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BiggestNum", "BiggestNum\BiggestNum.csproj", "{CE7FF178-E9FE-45DB-B4F0-AD8D179FE17B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{DBF1B9B0-F278-4EF1-AE44-44ECD7AD24DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBF1B9B0-F278-4EF1-AE44-44ECD7AD24DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBF1B9B0-F278-4EF1-AE44-44ECD7AD24DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE7FF178-E9FE-45DB-B4F0-AD8D179FE17B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE7FF178-E9FE-45DB-B4F0-AD8D179FE17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE7FF178-E9FE-45DB-B4F0-AD8D179FE17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE7FF178-E9FE-45DB-B4F0-AD8D179FE17B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
